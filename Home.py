@@ -14,7 +14,7 @@ SPREADSHEET_ID = "1YLwfQE1u_4d8UNoDG8eC1ysb2QEApxqtwoKTBGNUW6g"
 
 # 2. Función para cargar los logos en el menú lateral
 def cargar_logos():
-    st.sidebar.markdown("### Instituciones Aliadas")
+    st.sidebar.markdown("### 🏛️ Instituciones Aliadas")
     logos = ["anh.png", "upb.png", "usta.png", "minciencia.png", "unal.png", "udem.png"]
     col1, col2 = st.sidebar.columns(2)
     for i, logo in enumerate(logos):
@@ -57,10 +57,20 @@ def verificar_login():
                 except KeyError as e:
                     st.error(f"❌ Error de configuración en secretos: {e}")
         
+        # Si no está logeado, el código se detiene aquí
         st.stop()
 
 # --- EJECUCIÓN PRINCIPAL ---
 verificar_login()
+
+# --- NUEVO: BOTÓN DE CERRAR SESIÓN EN EL SIDEBAR ---
+with st.sidebar:
+    st.markdown(f"### 👤 Usuario: {st.session_state['rol'].capitalize()}")
+    if st.button("🚪 Cerrar Sesión", use_container_width=True):
+        st.session_state["logeado"] = False
+        st.rerun()
+    st.markdown("---")
+
 cargar_logos()
 
 # --- NUEVA ESTRUCTURA CON PESTAÑAS (TABS) ---
