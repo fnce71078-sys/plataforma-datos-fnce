@@ -154,7 +154,7 @@ def delete_column(spreadsheet_id, worksheet_name, col_name):
     except Exception:
         return False
 
-# --- FUNCIÓN DE DISEÑO PROFESIONAL ---
+# --- FUNCIÓN DE DISEÑO PROFESIONAL (ACTUALIZADA 2.0) ---
 def format_sheet_professional(spreadsheet_id, worksheet_name):
     client, service = init_connection()
     try:
@@ -162,12 +162,31 @@ def format_sheet_professional(spreadsheet_id, worksheet_name):
         ws = sheet.worksheet(worksheet_name)
         sheet_id = ws.id
         
+        # 1. Calculamos inteligentemente el tamaño exacto de la tabla
+        encabezados = ws.row_values(1)
+        max_cols = len(encabezados)
+        col_a = ws.col_values(1)
+        max_rows = len(col_a)
+
         requests = [
+            # Congelar la primera fila
             {"updateSheetProperties": {"properties": {"sheetId": sheet_id, "gridProperties": {"frozenRowCount": 1}}, "fields": "gridProperties.frozenRowCount"}},
-            {"repeatCell": {"range": {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": 1}, "cell": {"userEnteredFormat": {"backgroundColor": {"red": 0.1, "green": 0.2, "blue": 0.4}, "textFormat": {"foregroundColor": {"red": 1.0, "green": 1.0, "blue": 1.0}, "bold": True}, "horizontalAlignment": "CENTER"}}, "fields": "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)"}},
-            {"autoResizeDimensions": {"dimensions": {"sheetId": sheet_id, "dimension": "COLUMNS", "startIndex": 0}}}
+            
+            # Pintar los encabezados (Azul institucional)
+            {"repeatCell": {"range": {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": 1, "startColumnIndex": 0, "endColumnIndex": max_cols}, "cell": {"userEnteredFormat": {"backgroundColor": {"red": 0.1, "green": 0.2, "blue": 0.4}, "textFormat": {"foregroundColor": {"red": 1.0, "green": 1.0, "blue": 1.0}, "bold": True}, "horizontalAlignment": "CENTER", "verticalAlignment": "MIDDLE"}}, "fields": "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment,verticalAlignment)"}},
+            
+            # Centrar y organizar todos los datos nuevos que ingresaste por la app
+            {"repeatCell": {"range": {"sheetId": sheet_id, "startRowIndex": 1, "endRowIndex": max_rows, "startColumnIndex": 0, "endColumnIndex": max_cols}, "cell": {"userEnteredFormat": {"horizontalAlignment": "CENTER", "verticalAlignment": "MIDDLE"}}, "fields": "userEnteredFormat(horizontalAlignment,verticalAlignment)"}},
+            
+            # Dibujar la cuadrícula (Bordes sólidos para que parezca Excel)
+            {"updateBorders": {"range": {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": max_rows, "startColumnIndex": 0, "endColumnIndex": max_cols}, "top": {"style": "SOLID", "color": {"red": 0, "green": 0, "blue": 0}}, "bottom": {"style": "SOLID", "color": {"red": 0, "green": 0, "blue": 0}}, "left": {"style": "SOLID", "color": {"red": 0, "green": 0, "blue": 0}}, "right": {"style": "SOLID", "color": {"red": 0, "green": 0, "blue": 0}}, "innerHorizontal": {"style": "SOLID", "color": {"red": 0.8, "green": 0.8, "blue": 0.8}}, "innerVertical": {"style": "SOLID", "color": {"red": 0.8, "green": 0.8, "blue": 0.8}}}},
+            
+            # Ajustar el ancho de las columnas a la medida del texto
+            {"autoResizeDimensions": {"dimensions": {"sheetId": sheet_id, "dimension": "COLUMNS", "startIndex": 0, "endIndex": max_cols}}}
         ]
+        
         service.spreadsheets().batchUpdate(spreadsheetId=spreadsheet_id, body={"requests": requests}).execute()
         return True
     except Exception as e:
+        print(f"Error de formato: {e}")
         return False
