@@ -15,7 +15,10 @@ st.markdown("Análisis avanzado y comparativo de viabilidad de proyectos.")
 
 pestanas = gc.get_all_sheet_names(SPREADSHEET_ID)
 
-if not pestanas:
+# --- FILTRO MÁGICO APLICADO AQUÍ ---
+energias_reales = [p for p in pestanas if p != "Config_Diccionario"]
+
+if not energias_reales:
     st.info("Aún no hay energías creadas.")
     st.stop()
 
@@ -25,7 +28,8 @@ df_consolidado_lista = []
 
 # --- MOTOR DE LIMPIEZA Y ESTANDARIZACIÓN ---
 with st.spinner('Procesando y unificando datos...'):
-    for p in pestanas:
+    # Usamos energias_reales para que ignore el diccionario
+    for p in energias_reales: 
         nombre_energia = p.replace("Proyectos_", "")
         datos_hoja = gc.get_all_records(SPREADSHEET_ID, p)
         
@@ -64,7 +68,9 @@ tab_tablas, tab_graficas = st.tabs(["📋 VISIÓN GENERAL Y TABLAS", "📈 INTEL
 # ==========================================
 with tab_tablas:
     st.markdown("### 🌐 Resumen Automático de Proyectos")
-    cols_resumen = st.columns(len(pestanas))
+    
+    # Ajustamos la cantidad de columnas visuales a las energías reales
+    cols_resumen = st.columns(len(energias_reales)) 
     for i, nombre_energia in enumerate(columnas_por_energia.keys()):
         cantidad_proyectos = len(datos_maestros.get(nombre_energia, []))
         cantidad_indicadores = len(columnas_por_energia[nombre_energia])
