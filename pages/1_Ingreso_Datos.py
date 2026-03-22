@@ -13,11 +13,15 @@ if "logeado" not in st.session_state or not st.session_state["logeado"]:
 st.title("📝 Gestión de Proyectos FNCE")
 pestanas = gc.get_all_sheet_names(SPREADSHEET_ID)
 
-if not pestanas:
+# --- FILTRO MÁGICO APLICADO AQUÍ ---
+energias_reales = [p for p in pestanas if p != "Config_Diccionario"]
+
+if not energias_reales:
     st.info("Aún no hay energías creadas. Ve al 'Panel de Administración' en el Home.")
     st.stop()
 
-energia_seleccionada = st.selectbox("⚡ Selecciona la matriz de energía a gestionar:", pestanas)
+# Ahora el selectbox usa la lista limpia (energias_reales)
+energia_seleccionada = st.selectbox("⚡ Selecciona la matriz de energía a gestionar:", energias_reales)
 tab_ingreso, tab_vista = st.tabs(["➕ Registrar Nuevo Proyecto", "📊 Base de Datos Activa (Editar/Eliminar)"])
 
 # Usamos la nueva función con memoria caché
