@@ -16,7 +16,10 @@ st.markdown("Crea tablas personalizadas combinando variables de diferentes fuent
 
 pestanas = gc.get_all_sheet_names(SPREADSHEET_ID)
 
-if not pestanas:
+# --- FILTRO MÁGICO APLICADO AQUÍ ---
+energias_reales = [p for p in pestanas if p != "Config_Diccionario"]
+
+if not energias_reales:
     st.info("Aún no hay energías creadas.")
     st.stop()
 
@@ -25,7 +28,8 @@ df_consolidado_lista = []
 conteo_indicadores = [] # Lista para guardar cuántos indicadores tiene cada energía
 
 with st.spinner('Cargando toda la base de datos y calculando indicadores...'):
-    for p in pestanas:
+    # Usamos energias_reales para que el ciclo ignore el diccionario
+    for p in energias_reales: 
         nombre_energia = p.replace("Proyectos_", "")
         
         # Leemos las columnas para la gráfica superior
