@@ -154,7 +154,7 @@ def delete_column(spreadsheet_id, worksheet_name, col_name):
     except Exception:
         return False
 
-# --- FUNCIÓN DE DISEÑO PROFESIONAL (ACTUALIZADA 2.0) ---
+# --- FUNCIÓN DE DISEÑO PROFESIONAL (ACTUALIZADA 3.0) ---
 def format_sheet_professional(spreadsheet_id, worksheet_name):
     client, service = init_connection()
     try:
@@ -178,8 +178,8 @@ def format_sheet_professional(spreadsheet_id, worksheet_name):
             # Centrar y organizar todos los datos nuevos que ingresaste por la app
             {"repeatCell": {"range": {"sheetId": sheet_id, "startRowIndex": 1, "endRowIndex": max_rows, "startColumnIndex": 0, "endColumnIndex": max_cols}, "cell": {"userEnteredFormat": {"horizontalAlignment": "CENTER", "verticalAlignment": "MIDDLE"}}, "fields": "userEnteredFormat(horizontalAlignment,verticalAlignment)"}},
             
-            # Dibujar la cuadrícula (Bordes sólidos para que parezca Excel)
-            {"updateBorders": {"range": {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": max_rows, "startColumnIndex": 0, "endColumnIndex": max_cols}, "top": {"style": "SOLID", "color": {"red": 0, "green": 0, "blue": 0}}, "bottom": {"style": "SOLID", "color": {"red": 0, "green": 0, "blue": 0}}, "left": {"style": "SOLID", "color": {"red": 0, "green": 0, "blue": 0}}, "right": {"style": "SOLID", "color": {"red": 0, "green": 0, "blue": 0}}, "innerHorizontal": {"style": "SOLID", "color": {"red": 0.8, "green": 0.8, "blue": 0.8}}, "innerVertical": {"style": "SOLID", "color": {"red": 0.8, "green": 0.8, "blue": 0.8}}}},
+            # Dibujar la cuadrícula (Líneas NEGRAS sólidas para seccionar la tabla por completo)
+            {"updateBorders": {"range": {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": max_rows, "startColumnIndex": 0, "endColumnIndex": max_cols}, "top": {"style": "SOLID", "color": {"red": 0.0, "green": 0.0, "blue": 0.0}}, "bottom": {"style": "SOLID", "color": {"red": 0.0, "green": 0.0, "blue": 0.0}}, "left": {"style": "SOLID", "color": {"red": 0.0, "green": 0.0, "blue": 0.0}}, "right": {"style": "SOLID", "color": {"red": 0.0, "green": 0.0, "blue": 0.0}}, "innerHorizontal": {"style": "SOLID", "color": {"red": 0.0, "green": 0.0, "blue": 0.0}}, "innerVertical": {"style": "SOLID", "color": {"red": 0.0, "green": 0.0, "blue": 0.0}}}},
             
             # Ajustar el ancho de las columnas a la medida del texto
             {"autoResizeDimensions": {"dimensions": {"sheetId": sheet_id, "dimension": "COLUMNS", "startIndex": 0, "endIndex": max_cols}}}
