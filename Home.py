@@ -74,7 +74,7 @@ with st.sidebar:
 cargar_logos()
 
 # --- NUEVA ESTRUCTURA CON PESTAÑAS (TABS) ---
-st.title("🌱 Matriz de Viabilidad - Proyectos FNCE")
+st.title("🗄️ Base de Datos Central - Proyectos FNCE")
 
 # Creamos las pestañas. Si es admin, ve ambas. Si es usuario, solo ve la presentación.
 if st.session_state["rol"] == "admin":
